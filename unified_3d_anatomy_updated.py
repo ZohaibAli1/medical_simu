@@ -32,6 +32,40 @@ class UnifiedAnatomySystem:
 
         self.current_layer = 'organs'
 
+    def load_complete_anatomy(self):
+        """Placeholder for loading all models."""
+        self.create_complete_skeleton()
+        self.create_detailed_heart()
+        self.create_detailed_lungs()
+        self.create_brain_model()
+        self.create_digestive_system()
+        self.create_muscular_system()
+        self.create_nervous_system()
+        # Placeholder for 'appendix' model for the procedure
+        self.create_appendix_model()
+
+    def create_appendix_model(self):
+        """Simplified appendix model for the procedure."""
+        appendix = vtk.vtkCylinderSource()
+        appendix.SetRadius(3)
+        appendix.SetHeight(30)
+        appendix.SetResolution(8)
+
+        appendix_mapper = vtk.vtkPolyDataMapper()
+        appendix_mapper.SetInputConnection(appendix.GetOutputPort())
+
+        appendix_actor = vtk.vtkActor()
+        appendix_actor.SetMapper(appendix_mapper)
+        appendix_actor.GetProperty().SetColor(0.0, 0.8, 0.0) # Green
+        appendix_actor.SetPosition(50, 100, 50) # Placeholder position
+
+        self.models['appendix'] = {
+            'actor': appendix_actor,
+            'layer': 'organs',
+            'visible': True
+        }
+        self.renderer.AddActor(appendix_actor)
+
     def create_complete_skeleton(self):
         """Create complete skeletal system"""
         skeleton_parts = {}
@@ -380,7 +414,7 @@ class UnifiedAnatomySystem:
     def create_muscular_system(self):
         """Create simplified muscular system"""
         # Pectoral muscles
-        pectoral = vtk.vvtkSphereSource()
+        pectoral = vtk.vtkSphereSource()
         pectoral.SetRadius(35)
         pectoral.SetPhiResolution(15)
         pectoral.SetThetaResolution(15)
@@ -485,6 +519,40 @@ class UnifiedAnatomySystem:
 
         arr = numpy_support.vtk_to_numpy(vtk_array)
         arr = arr.reshape(height, width, components)
+        
+        # VTK returns RGB, OpenCV expects BGR
+        if components == 3:
+            arr = cv2.cvtColor(arr, cv2.COLOR_RGB2BGR)
+        
+        # Flip image vertically (VTK origin is bottom-left)
+        arr = np.flipud(arr)
+        
+        return arr
+
+class UnifiedAnatomyController:
+    def __init__(self, anatomy_system):
+        self.anatomy = anatomy_system
+
+    def handle_rotation(self, dx, dy):
+        """Handle rotation based on mouse/gesture movement."""
+        self.anatomy.renderer.GetActiveCamera().Azimuth(dx * 0.1)
+        self.anatomy.renderer.GetActiveCamera().Elevation(dy * 0.1)
+        self.anatomy.render_window.Render()
+
+    def handle_zoom(self, factor):
+        """Handle zoom."""
+        self.anatomy.renderer.GetActiveCamera().Dolly(factor)
+        self.anatomy.render_window.Render()
+
+    def switch_layer(self, layer_name):
+        """Switch the current visible layer."""
+        if layer_name in self.anatomy.layers:
+            self.anatomy.current_layer = layer_name
+            # Update visibility for all models
+            for model_name, model_data in self.anatomy.models.items():
+                is_visible = model_data['layer'] == layer_name
+                model_data['actor'].SetVisibility(is_visible)
+            self.anatomy.render_window.Render()
 
         arr = cv2.cvtColor(arr, cv2.COLOR_RGB2BGR)
         arr = cv2.flip(arr, 0)  # VTK image is upside down
