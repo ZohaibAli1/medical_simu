@@ -8,6 +8,7 @@ class ProcedureAction(Enum):
     EXTRACT = "extract"
     SELECT_TOOL = "select_tool"
     IDENTIFY_ORGAN = "identify_organ"
+    NONE = "none"  # Fixed: Added NONE
 
 class ProcedureStep:
     def __init__(self, step_id, description, required_action, target_organ=None, required_tool=None, success_criteria=None):
@@ -28,8 +29,6 @@ class ProcedureStep:
         if self.target_organ and action_data.get('target') != self.target_organ:
             return False
 
-        # Add more checks here (e.g., incision length, depth, correct tool)
-        
         self.is_completed = True
         return True
 
@@ -55,7 +54,7 @@ class ProcedureScript:
         for step in self.steps:
             step.is_completed = False
 
-# --- Example Procedure: Simplified Appendectomy ---
+# --- Corrected Function Definition ---
 def create_appendectomy_script():
     steps = [
         ProcedureStep(
@@ -100,28 +99,3 @@ def create_appendectomy_script():
 if __name__ == '__main__':
     script = create_appendectomy_script()
     print(f"Procedure: {script.name}")
-    
-    current_step = script.get_current_step()
-    print(f"Current Step: {current_step.step_id}. {current_step.description}")
-
-    # Simulate a correct action for step 1
-    action_data = {'action': ProcedureAction.IDENTIFY_ORGAN, 'target': 'appendix'}
-    if current_step.check_completion(action_data):
-        print("Step 1 completed successfully.")
-        script.advance_step()
-
-    current_step = script.get_current_step()
-    print(f"Current Step: {current_step.step_id}. {current_step.description}")
-
-    # Simulate an incorrect action for step 2
-    action_data = {'action': ProcedureAction.SUTURE, 'target': 'skin'}
-    if not current_step.check_completion(action_data):
-        print("Incorrect action. Step 2 not completed.")
-
-    # Simulate a correct action for step 2
-    action_data = {'action': ProcedureAction.INCISION, 'target': 'skin', 'tool': 'scalpel'}
-    if current_step.check_completion(action_data):
-        print("Step 2 completed successfully.")
-        script.advance_step()
-
-    print(f"Procedure finished: {script.get_current_step() is None}")
