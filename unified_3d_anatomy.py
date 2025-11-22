@@ -19,7 +19,7 @@ class UnifiedAnatomySystem:
         self.camera.SetPosition(0, -300, 300)
         self.camera.SetFocalPoint(0, 0, 0)
         self.camera.SetViewUp(0, 0, 1)
-        self.renderer.SetBackground(0.1, 0.1, 0.2)
+        self.renderer.SetBackground(0.0, 0.0, 0.0)  # Black background for AR overlay
 
         # Layer system
         self.layers = {
@@ -502,6 +502,28 @@ class UnifiedAnatomySystem:
         # Reset rotations
         for model_data in self.models.values():
             model_data['actor'].SetOrientation(0, 0, 0)
+
+    def focus_on_organ(self, organ_name):
+        """Dynamically focus camera on a specific organ"""
+        if organ_name in self.models:
+            actor = self.models[organ_name]['actor']
+            pos = actor.GetPosition()
+            
+            # Smoothly move camera (simplified for now, just set)
+            self.camera.SetFocalPoint(pos)
+            
+            # Adjust camera position to be in front of the organ
+            # Keep the same relative direction but move closer/further
+            current_pos = np.array(self.camera.GetPosition())
+            focal_point = np.array(pos)
+            direction = current_pos - focal_point
+            direction = direction / np.linalg.norm(direction)
+            
+            # Set new position at a fixed distance
+            new_pos = focal_point + direction * 200  # 200 units distance
+            self.camera.SetPosition(new_pos)
+            self.camera.SetViewUp(0, 0, 1)
+            self.render_window.Render()
 
     def render_to_image(self):
         """Render 3D scene to numpy image"""

@@ -61,7 +61,8 @@ def create_appendectomy_script():
             step_id=1,
             description="Identify the appendix and surrounding structures.",
             required_action=ProcedureAction.IDENTIFY_ORGAN,
-            target_organ="appendix"
+            target_organ="appendix",
+            required_tool="none"
         ),
         ProcedureStep(
             step_id=2,
@@ -74,28 +75,67 @@ def create_appendectomy_script():
             step_id=3,
             description="Carefully dissect the appendix from the surrounding tissue.",
             required_action=ProcedureAction.DISSECTION,
-            target_organ="appendix"
+            target_organ="appendix",
+            required_tool="forceps"
         ),
         ProcedureStep(
             step_id=4,
             description="Cauterize the base of the appendix.",
             required_action=ProcedureAction.CAUTERIZE,
-            target_organ="appendix_base"
+            target_organ="appendix_base",
+            required_tool="cauterizer"
         ),
         ProcedureStep(
             step_id=5,
             description="Extract the appendix.",
             required_action=ProcedureAction.EXTRACT,
-            target_organ="appendix"
+            target_organ="appendix",
+            required_tool="forceps"
         ),
         ProcedureStep(
             step_id=6,
             description="Suture the incision site.",
-            required_action=ProcedureAction.SUTURE
+            required_action=ProcedureAction.SUTURE,
+            required_tool="needle_driver"
         )
     ]
-    return ProcedureScript("Simplified Appendectomy", steps)
+    return ProcedureScript("Appendectomy", steps)
+
+def create_gallbladder_script():
+    steps = [
+        ProcedureStep(
+            step_id=1,
+            description="Identify the gallbladder.",
+            required_action=ProcedureAction.IDENTIFY_ORGAN,
+            target_organ="gallbladder",
+            required_tool="none"
+        ),
+        ProcedureStep(
+            step_id=2,
+            description="Dissect the cystic duct.",
+            required_action=ProcedureAction.DISSECTION,
+            target_organ="cystic_duct",
+            required_tool="forceps"
+        ),
+        ProcedureStep(
+            step_id=3,
+            description="Clip and cut the cystic duct.",
+            required_action=ProcedureAction.INCISION,
+            target_organ="cystic_duct",
+            required_tool="scalpel"
+        ),
+        ProcedureStep(
+            step_id=4,
+            description="Extract the gallbladder.",
+            required_action=ProcedureAction.EXTRACT,
+            target_organ="gallbladder",
+            required_tool="forceps"
+        )
+    ]
+    return ProcedureScript("Gallbladder Removal", steps)
 
 if __name__ == '__main__':
     script = create_appendectomy_script()
     print(f"Procedure: {script.name}")
+    script2 = create_gallbladder_script()
+    print(f"Procedure: {script2.name}")

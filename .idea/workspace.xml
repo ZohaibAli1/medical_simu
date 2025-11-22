@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1a55d606-edba-4728-8f5b-43c1aec2890d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/integrated_medical_simulator_updated.py" beforeDir="false" afterPath="$PROJECT_DIR$/integrated_medical_simulator_updated.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +46,10 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.assessment_module.executor&quot;: &quot;Run&quot;,
+    &quot;Python.integrated_medical_simulator_updated.executor&quot;: &quot;Run&quot;,
+    &quot;Python.procedure_scripting.executor&quot;: &quot;Run&quot;,
+    &quot;Python.surgical_procedures.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
